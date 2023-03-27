@@ -1,0 +1,10 @@
+# https://prettier.io/docs/en/options.html
+printWidth: 110 # keep in sync with .eslintrc.yaml max-len
+semi: false
+trailingComma: all
+singleQuote: false
+tabWidth: 2
+useTabs: false
+jsxBracketSameLine: true
+html.format.wrapAttributes: auto
+html.format.wrapLineLength: 0
