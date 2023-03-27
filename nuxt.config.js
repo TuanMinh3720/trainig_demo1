@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     server: false,
     client: false,
   },
-
+  ssr: false,
   build: {
     transpile:
       process.env.NODE_ENV === "production"
