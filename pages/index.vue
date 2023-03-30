@@ -144,6 +144,7 @@ const boxs = ref([])
 const newVariable = ref("")
 const newInitialValue = ref("")
 const newCurrentValue = ref("")
+const { data, error } = useFetch("https://6406b120862956433e575082.mockapi.io/comment")
 
 function addNewRow(index) {
   // kiểm tra xem giá trị của biến "newVariable" có khác rỗng hay không
