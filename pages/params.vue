@@ -2,9 +2,9 @@
   <n-layout>
     <n-layout-header>
       <div class="flex justify-between items-center">
-        <p class="flex items-center">
-          <Nuxt-link to="/" class="text-gray-400 font-normal mr-1 decoration-none"
-            >New Collection /</Nuxt-link
+        <p class="flex items-center ml-5">
+          <nuxt-link to="/" class="text-gray-400 font-normal mr-1 decoration-none"
+            >New Collection /</nuxt-link
           >
           <span class="text-gray-400 font-normal mr-1">New Folder / </span>
           <span class="text-black font-bold">New Request</span>
@@ -35,18 +35,17 @@
       <Header />
     </n-layout-header>
     <n-layout-content content-style="">
-      <div class="flex items-center">
+      <div class="ml-5 flex items-center">
         <n-space class="w-15%" vertical>
           <n-select v-model:value="selectRef" :options="options1" />
         </n-space>
         <input
-          placeholder="Enter URL or paste text"
           v-model="inputData"
+          placeholder="Enter URL or paste text"
           class="bg-gray-100 focus:bg-white h-7 w-80%"
         />
-
         <div class="flex items-center ml-2 mr-2">
-          <n-button class="h-8.5" color="blue" @click="getApi">Send</n-button>
+          <n-button @click="getApi" class="h-8.5" color="blue">Send</n-button>
           <div class="bg-#0000FF h-8.5">
             <n-dropdown placement="bottom-start" trigger="click" :options="options2">
               <div class="i-mdi:chevron-down bg-white text-xl"></div>
@@ -57,96 +56,65 @@
       <hr class="opacity-50" />
     </n-layout-content>
     <n-layout-footer class=" ">
-      <n-card>
-        <n-tabs type="line" animated>
-          <n-tab-pane tab="Params">
-            <div class="flex w-full divide-x">
-              <div class="w-1/2 h-screen">
-                <div class="flex items-center">
-                  <p class="font-bold">Query Param</p>
+      <div class="flex w-full h-screen divide-x divide-gray-300">
+        <div class="w2/3 bg-white">
+          <n-card>
+            <n-tabs type="line" animated>
+              <n-tab-pane name="oasis" tab="Params">
+                <div>
+                  <p class="font-bold">Query Params</p>
                 </div>
-
-                <n-table>
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Key</th>
-                      <th>Value</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(box, index) in boxs" :key="index">
-                      <td></td>
-                      <td>
-                        <input
-                          class="border-none"
-                          type="text"
-                          v-model="box.variable"
-                          @keydown.enter="addNewRow(index)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          class="border-none"
-                          type="text"
-                          v-model="box.initialValue"
-                          @keydown.enter="addNewRow(index)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          class="border-none"
-                          type="text"
-                          v-model="box.currentValue"
-                          @keydown.enter="addNewRow(index)"
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>
-                        <input
-                          class="border-none"
-                          placeholder="Key"
-                          type="text"
-                          v-model="newVariable"
-                          @keydown.enter="addNewRow(boxs.length)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          placeholder="Value"
-                          class="border-none"
-                          type="text"
-                          v-model="newInitialValue"
-                          @keydown.enter="addNewRow(boxs.length)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          placeholder="Description"
-                          class="border-none"
-                          type="text"
-                          v-model="newCurrentValue"
-                          @keydown.enter="addNewRow(boxs.length)"
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </n-table>
-              </div>
-              <div class="bg-white w-1/2 h-screen">
-                <div v-if="responseData">
-                  <h3>Response Data:</h3>
-                  <pre>{{ JSON.stringify(responseData, null, 2) }}</pre>
+                <div>
+                  <n-table :bordered="false" :single-line="false" class="w-full">
+                    <thead>
+                      <tr>
+                        <th class="w-5%"></th>
+                        <th class="w-10%">Key</th>
+                        <th class="w-10%">Value</th>
+                        <th>Description</th>
+                        <th class="w-full flex">
+                          <div class="i-mdi:dots-horizontal text-xl"></div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(param, index) in params" :key="index">
+                        <td>
+                          <input type="checkbox" v-model="param.checked" @change="toggleEnabled(index)" />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            v-model="param.key"
+                            placeholder="Key"
+                            @input="handleInput(index)"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            v-model="param.value"
+                            placeholder="Value"
+                            @input="handleInput(index)"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            v-model="param.description"
+                            placeholder="Description"
+                            @input="handleInput(index)"
+                          />
+                        </td>
+                        <td>
+                          <div @click="removeParam(index)" class="i-mdi:trash-can-outline text-xl"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </n-table>
                 </div>
-              </div>
-            </div>
-          </n-tab-pane>
-          <n-tab-pane name="the beatles" tab="Headers">
-            <div class="flex w-full divide-x">
-              <div class="h-screen w-1/2">
+              </n-tab-pane>
+              <n-tab-pane name="the beatles" tab="Herders">
                 <div class="flex items-center">
                   <p class="font-600">Headers</p>
                   <n-button class="ml-5 bg-gray-1 p-1 rounded-lg h-5 text-sm" @click="toggleTable">
@@ -156,6 +124,7 @@
                   </n-button>
                 </div>
 
+                <!-- table -->
                 <div>
                   <n-table v-if="!showTable">
                     <thead>
@@ -350,45 +319,52 @@
                     </tbody>
                   </n-table>
                 </div>
-              </div>
-              <div class="bg-white w-1/2 h-screen">
-                <h2 class="ml-5 text-truegray">Reponse</h2>
-                <img class="mt-30% ml-30%" src="./Postman11.png" alt="" />
-              </div>
-            </div>
-          </n-tab-pane>
-          <n-tab-pane name="jay chou" tab="Body">
-            <div class="flex w-full divide-x">
-              <div class="h-screen w-1/2">
-                <div class="flex items-center">
-                  <div class="flex bg-gray-100 border border-gray-300 rounded p-1 mr-4">
-                    <div class="flex items-center mr-1">
-                      <div class="cursor-pointer ml-1">raw</div>
+              </n-tab-pane>
+              <n-tab-pane name="jay chou" tab="Body">
+                <div>
+                  <div class="flex items-center">
+                    <div class="flex w-10% bg-gray-100 border border-gray-300 rounded p-1 mr-4">
+                      <div class="flex items-center mr-1">
+                        <div class="cursor-pointer ml-1">raw</div>
+                      </div>
+                      <n-dropdown placement="bottom-start" trigger="click" size="small" :options="options4">
+                        <div class="i-mdi:chevron-down text-xl"></div>
+                      </n-dropdown>
                     </div>
-                    <n-dropdown placement="bottom-start" trigger="click" size="small" :options="options4">
+                    <p class="text-blue-500 font-500">JSON</p>
+                    <n-dropdown placement="bottom-start" trigger="click" size="small" :options="options5">
                       <div class="i-mdi:chevron-down text-xl"></div>
                     </n-dropdown>
                   </div>
-                  <p class="text-blue-500 font-500">JSON</p>
-                  <n-dropdown placement="bottom-start" trigger="click" size="small" :options="options5">
-                    <div class="i-mdi:chevron-down text-xl"></div>
-                  </n-dropdown>
+                  <div>
+                    <textarea
+                      ref="input"
+                      v-model="inputValue"
+                      @keyup.enter.prevent="submitInput"
+                      class="w-full h-400px"
+                    ></textarea>
+                  </div>
                 </div>
-              </div>
-              <div class="bg-white w-1/2 h-screen">
-                <h2 class="ml-5 text-truegray">Reponse</h2>
-                <img class="mt-30% ml-30%" src="./Postman11.png" alt="" />
-              </div>
-            </div>
-          </n-tab-pane>
-        </n-tabs>
-      </n-card>
+              </n-tab-pane>
+            </n-tabs>
+          </n-card>
+        </div>
+        <div class="w1/3 bg-white">
+          <div v-if="responseData">
+            <h2 class="ml-5 text-truegray">Reponse</h2>
+            <pre>{{ JSON.stringify(responseData, null, 2) }}</pre>
+          </div>
+          <div v-if="errorMsg" class="text-red-500 text-xl">
+            <p>"{{ errorMsg }}"</p>
+          </div>
+        </div>
+      </div>
     </n-layout-footer>
   </n-layout>
 </template>
 <script setup>
-import { ref, watch, onMounted } from "vue"
-const items = ref([])
+import { ref, watch, watchEffect, nextTick } from "vue"
+import axios from "axios"
 
 const boxs = ref([])
 const showTable = ref(false)
@@ -397,6 +373,14 @@ const toggleCount = ref(0)
 const newVariable = ref("")
 const newInitialValue = ref("")
 const newCurrentValue = ref("")
+
+const inputValue = ref("")
+const inputRef = ref(null)
+const errorMsg = ref("")
+
+const selectRef = ref("GET")
+const inputData = ref("https://642541e49e0a30d92b2ccf2a.mockapi.io/Minhh")
+const responseData = ref(null)
 const toggleTable = () => {
   toggleCount.value++
   showTable.value = toggleCount.value % 2 === 1
@@ -406,14 +390,17 @@ const buttonText = computed(() => {
   return toggleCount.value % 2 === 0 ? "6 hidden" : "Hide auto-generated headers"
 })
 
-const addNewRow = (index) => {
+function addNewRow(index) {
+  // kiểm tra xem giá trị của biến "newVariable" có khác rỗng hay không
   if (newVariable.value.trim() !== "") {
     boxs.value.splice(index + 1, 0, {
+      // Hàm "splice" được sử dụng để thêm một mục mới vào danh sách "boxs" tại vị trí "index + 1"
       variable: newVariable.value,
       initialValue: newInitialValue.value,
       currentValue: newCurrentValue.value,
+      // Giá trị của các thuộc tính "variable", "initialValue" và "currentValue" của mục mới được đặt bằng giá trị hiện tại của các biến "newVariable", "newInitialValue" và "newCurrentValue".
     })
-
+    // Sau khi thêm mục mới, giá trị của các biến "newVariable", "newInitialValue" và "newCurrentValue" được đặt lại là rỗng để chuẩn bị cho việc nhập giá trị mới cho các thuộc tính của mục tiếp theo.
     newVariable.value = ""
     newInitialValue.value = ""
     newCurrentValue.value = ""
@@ -439,70 +426,81 @@ const addNewRow = (index) => {
     newCurrentValue.value = ""
   }
 }
+// js bảng params
+
+const params = ref([{ key: "", value: "", description: "", enabled: true, checked: true }])
+const newParam = ref({ key: "", value: "", description: "", enabled: true })
+
+function addParam() {
+  params.value.push(newParam.value)
+  newParam.value = { key: "", value: "", description: "", enabled: true, checked: true }
+  updateQueryString()
+}
+
+function removeParam(index) {
+  params.value.splice(index, 1)
+  updateQueryString()
+}
+function handleInput(index) {
+  if (index === params.value.length - 1) {
+    params.value.push({ key: "", value: "", description: "", enabled: true, checked: true })
+  }
+  updateQueryString()
+}
+
+function toggleEnabled(index) {
+  params.value[index].enabled = params.value[index].checked
+  updateQueryString()
+}
+
+function updateQueryString() {
+  // Lấy các tham số được chọn và có giá trị key từ mảng params, sử dụng method filter()
+  const queryString = params.value
+    .filter((param) => param.enabled && param.key)
+    // Chuyển các tham số này thành chuỗi query string, sử dụng method map() và method join()
+    .map((param) => `${encodeURIComponent(param.key)}=${encodeURIComponent(param.value)}`)
+    .join("&")
+
+  // Tạo một đối tượng URL từ giá trị đường dẫn hiện tại
+  const url = new URL(inputData.value)
+  // Cập nhật chuỗi truy vấn trong đường dẫn với chuỗi query string mới
+  url.search = queryString
+  // Cập nhật đường dẫn mới vào giá trị của input có id là "inputData"
+  inputData.value = url.toString()
+}
+
+watch(params, () => {
+  updateQueryString()
+})
+//js bảng params
 
 watch(boxs, (newboxs) => {
   console.log(newboxs)
 })
 
-onMounted(() => {
-  console.log("Table mounted")
+watchEffect(() => {
+  nextTick(() => {
+    if (inputRef.value) {
+      inputRef.value.style.height = "auto"
+      inputRef.value.style.height = `${inputRef.value.scrollHeight}px`
+    }
+  })
 })
+
+function submitInput() {
+  console.log(inputValue.value)
+}
 const options = [
   {
     label: "Save as...",
   },
 ]
 
-const selectRef = ref("GET")
-const inputData = ref("")
-const responseData = ref(null)
-
-const getApi = async () => {
-  switch (selectRef.value) {
-    case "GET":
-      console.log("get Api")
-      await handleGet()
-      break
-
-    case "POST":
-      console.log("post api")
-      await handlePost()
-      break
-
-    case "PUT":
-      console.log("put api")
-      break
-
-    case "DELETE":
-      console.log("delete api")
-      break
-
-    default:
-      break
-  }
-}
-
 const options1 = [
-  {
-    label: "GET",
-    value: "GET",
-  },
-  {
-    label: "POST",
-    value: "POST",
-  },
-  {
-    label: "PUT",
-    value: "PUT",
-  },
-  {
-    label: "PATCH",
-    value: "PATCH",
-  },
-  {
-    label: "DELETE",
-    value: "DELETE",
-  },
+  { label: "GET", value: "GET" },
+  { label: "POST", value: "POST" },
+  { label: "PUT", value: "PUT" },
+  { label: "DELETE", value: "DELETE" },
 ]
 const options2 = [
   {
@@ -554,25 +552,95 @@ const options5 = [
     label: "XML",
   },
 ]
+
+const getApi = async () => {
+  if (!isValidUrl(inputData.value)) {
+    errorMsg.value = "URL không đúng định dạng"
+    responseData.value = null
+    return
+  } else {
+    errorMsg.value = null
+  }
+  switch (selectRef.value) {
+    case "GET":
+      await handleGet()
+      break
+    case "POST":
+      console.log("post api")
+      await handlePost()
+      break
+    case "PUT":
+      console.log("put api")
+      await handlePut()
+      break
+    case "DELETE":
+      await handleDelete()
+      console.log("delete api")
+      break
+    default:
+      break
+  }
+}
 const handleGet = async () => {
-  const response = await fetch("https://fakestoreapi.com/products")
-  const data = await response.json()
-  responseData.value = data
-  console.log(data)
+  try {
+    const response = await axios.get(inputData.value)
+    responseData.value = response.data
+  } catch (error) {
+    console.error(error)
+    if (error.response) {
+      // const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
+      // errorMsg.value = errorMessage
+      responseData.value = error.response
+    }
+  }
+  console.log(respone)
 }
 
 const handlePost = async () => {
-  const { data, error, pending, refresh } = await useFetch("https://fakestoreapi.com/products", {
-    method: "POST",
+  try {
+    const data = inputValue.value ? JSON.parse(inputValue.value) : null
 
-    body: {
-      title: "test product",
-      price: 13.5,
-      description: "lorem ipsum set",
-      image: "https://i.pravatar.cc",
-      category: "electronic",
-    },
-  })
-  console.log("🚀 ~ file: detail.vue:373 ~ handlePost ~ data:", data)
+    const response = await axios.post(inputData.value, data)
+    responseData.value = response.data
+  } catch (error) {
+    console.error(error)
+    if (error.response) {
+      const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
+      errorMsg.value = errorMessage
+      responseData.value = null
+    }
+  }
+}
+const handlePut = async () => {
+  try {
+    const data = JSON.parse(inputValue.value)
+    const response = await axios.put(inputData.value, data)
+    responseData.value = response.data
+  } catch (error) {
+    console.error(error)
+    if (error.response && error.response.status === 404) {
+      errorMsg.value = "Lỗi"
+    } else {
+      errorMsg.value = "Không tồn tại ID trong API"
+    }
+    responseData.value = null
+  }
+}
+const handleDelete = async () => {
+  try {
+    const response = await axios.delete(inputData.value)
+    responseData.value = response.data
+  } catch (error) {
+    console.error(error)
+    if (error.response) {
+      const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
+      errorMsg.value = errorMessage
+      responseData.value = null
+    }
+  }
+}
+function isValidUrl(url) {
+  const urlPattern = /^(http|https):\/\/[^\s/$.?#].[^\s]*$/i
+  return urlPattern.test(url)
 }
 </script>
