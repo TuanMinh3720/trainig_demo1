@@ -25,6 +25,7 @@ declare module '@vue/runtime-core' {
     NLayoutSider: typeof import('naive-ui')['NLayoutSider']
     NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
+    NSpin: typeof import('naive-ui')['NSpin']
     NTable: typeof import('naive-ui')['NTable']
     NTableColumn: typeof import('naive-ui')['NTableColumn']
     NTabPane: typeof import('naive-ui')['NTabPane']

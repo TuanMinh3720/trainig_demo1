@@ -23,7 +23,7 @@
             <div class="i-mdi:dots-horizontal text-xl"></div>
           </n-dropdown>
 
-          <div class="flex items-center bg-gray-1 p-1 rounded-lg h-7 ml-8">
+          <div class="flex items-center bg-gray-1 p-1 rounded-lg h-7 ml-8 mr-3">
             <div class="relative bg-white p-1 rounded-sm">
               <div class="i-mdi:pencil text-xl bg-orange"></div>
             </div>
@@ -36,19 +36,21 @@
     </n-layout-header>
     <n-layout-content content-style="">
       <div class="ml-5 flex items-center">
-        <n-space class="w-15%" vertical>
-          <n-select v-model:value="selectRef" :options="options1" />
+        <n-space class="w-15% p-1" vertical>
+          <n-select v-model:value="selectRef" :options="options1" size="large" />
         </n-space>
-        <input
-          v-model="inputData"
+        <n-input
+          v-model:value="inputData"
           placeholder="Enter URL or paste text"
-          class="bg-gray-100 focus:bg-white h-7 w-80%"
+          class="border h-10 w-80% p-1"
         />
-        <div class="flex items-center ml-2 mr-2">
-          <n-button @click="getApi" class="h-8.5" color="blue">Send</n-button>
-          <div class="bg-#0000FF h-8.5">
+        <div class="flex items-center ml-2 mr-2 bg-blue-600 rounded-md h-10">
+          <button @click="getApi" class="bg-blue-600 text-white border-none font-bold py-2 px-4 rounded-md">
+            Send
+          </button>
+          <div class="bg-blue-600 rounded-md p-1">
             <n-dropdown placement="bottom-start" trigger="click" :options="options2">
-              <div class="i-mdi:chevron-down bg-white text-xl"></div>
+              <div class="i-mdi:chevron-down bg-white"></div>
             </n-dropdown>
           </div>
         </div>
@@ -60,17 +62,17 @@
         <div class="w2/3 bg-white">
           <n-card>
             <n-tabs type="line" animated>
-              <n-tab-pane name="oasis" tab="Params">
+              <n-tab-pane name="Params" tab="Params">
                 <div>
                   <p class="font-bold">Query Params</p>
                 </div>
                 <div>
-                  <n-table :bordered="false" :single-line="false" class="w-full">
+                  <n-table :bordered="false" :single-line="false">
                     <thead>
                       <tr>
-                        <th class="w-5%"></th>
-                        <th class="w-10%">Key</th>
-                        <th class="w-10%">Value</th>
+                        <th></th>
+                        <th>Key</th>
+                        <th>Value</th>
                         <th>Description</th>
                         <th class="w-full flex">
                           <div class="i-mdi:dots-horizontal text-xl"></div>
@@ -114,7 +116,7 @@
                   </n-table>
                 </div>
               </n-tab-pane>
-              <n-tab-pane name="the beatles" tab="Herders">
+              <n-tab-pane name="the beatles" tab="Headers">
                 <div class="flex items-center">
                   <p class="font-600">Headers</p>
                   <n-button class="ml-5 bg-gray-1 p-1 rounded-lg h-5 text-sm" @click="toggleTable">
@@ -350,12 +352,21 @@
           </n-card>
         </div>
         <div class="w1/3 bg-white">
+          <h2 class="ml-5 text-truegray">Response</h2>
+          <img v-if="showImg" src="./Postman.png" alt="" class="ml-10 mt-20" />
           <div v-if="responseData">
-            <h2 class="ml-5 text-truegray">Reponse</h2>
-            <pre>{{ JSON.stringify(responseData, null, 2) }}</pre>
+            <div v-show="!isLoading">
+              <pre class="whitespace-pre-wrap overflow-anywhere">{{
+                JSON.stringify(responseData, null, 2)
+              }}</pre>
+            </div>
           </div>
-          <div v-if="errorMsg" class="text-red-500 text-xl">
-            <p>"{{ errorMsg }}"</p>
+          <div v-if="errorMsg">
+            <h2 class="ml-5 text-red-500">Error</h2>
+            <p class="ml-5">{{ errorMsg }}</p>
+          </div>
+          <div v-if="isLoading" class="flex items-center justify-center h-full">
+            <n-spin show-text />
           </div>
         </div>
       </div>
@@ -369,6 +380,7 @@ import axios from "axios"
 const boxs = ref([])
 const showTable = ref(false)
 const toggleCount = ref(0)
+const showImg = ref(true)
 
 const newVariable = ref("")
 const newInitialValue = ref("")
@@ -377,6 +389,8 @@ const newCurrentValue = ref("")
 const inputValue = ref("")
 const inputRef = ref(null)
 const errorMsg = ref("")
+
+const isLoading = ref(false)
 
 const selectRef = ref("GET")
 const inputData = ref("https://642541e49e0a30d92b2ccf2a.mockapi.io/Minhh")
@@ -554,6 +568,7 @@ const options5 = [
 ]
 
 const getApi = async () => {
+  isLoading.value = true
   if (!isValidUrl(inputData.value)) {
     errorMsg.value = "URL không đúng định dạng"
     responseData.value = null
@@ -580,33 +595,37 @@ const getApi = async () => {
     default:
       break
   }
+  isLoading.value = false
+  showImg.value = false
 }
+
 const handleGet = async () => {
   try {
     const response = await axios.get(inputData.value)
+
     responseData.value = response.data
   } catch (error) {
     console.error(error)
     if (error.response) {
-      // const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
-      // errorMsg.value = errorMessage
       responseData.value = error.response
+    } else {
+      errorMsg.value = "Đã xảy ra lỗi trong quá trình gửi yêu cầu"
+      responseData.value = null
     }
   }
-  console.log(respone)
 }
 
 const handlePost = async () => {
   try {
     const data = inputValue.value ? JSON.parse(inputValue.value) : null
-
     const response = await axios.post(inputData.value, data)
     responseData.value = response.data
   } catch (error) {
     console.error(error)
     if (error.response) {
-      const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
-      errorMsg.value = errorMessage
+      responseData.value = error.response
+    } else {
+      errorMsg.value = "Đã xảy ra lỗi trong quá trình gửi yêu cầu"
       responseData.value = null
     }
   }
@@ -618,12 +637,12 @@ const handlePut = async () => {
     responseData.value = response.data
   } catch (error) {
     console.error(error)
-    if (error.response && error.response.status === 404) {
-      errorMsg.value = "Lỗi"
+    if (error.response) {
+      responseData.value = error.response
     } else {
-      errorMsg.value = "Không tồn tại ID trong API"
+      errorMsg.value = "Đã xảy ra lỗi trong quá trình gửi yêu cầu"
+      responseData.value = null
     }
-    responseData.value = null
   }
 }
 const handleDelete = async () => {
@@ -633,8 +652,9 @@ const handleDelete = async () => {
   } catch (error) {
     console.error(error)
     if (error.response) {
-      const errorMessage = error.response.data?.errorMessage || "Không tồn tại ID trong API "
-      errorMsg.value = errorMessage
+      responseData.value = error.response
+    } else {
+      errorMsg.value = "Đã xảy ra lỗi trong quá trình gửi yêu cầu"
       responseData.value = null
     }
   }

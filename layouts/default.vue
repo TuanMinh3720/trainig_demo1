@@ -1,12 +1,12 @@
 <template>
-  <div class="h-screen">
+  <div>
     <n-layout has-sider>
-      <n-layout-sider class="bg-#F8F8FF h-screen" content-style="padding: 24px;">
-        <div class="flex">
-          <div class="i-mdi:plus mr-5 text-xl" @click="addCollection"></div>
+      <n-layout-sider class="bg-white" content-style="padding: 10px; border: 1px solid lightgray;">
+        <div class="flex items-center">
+          <div class="i-mdi:plus mr-2 text-4xl" @click="addCollection"></div>
 
           <input class="w-full h3% text-blue" type="text" />
-          <div class="i-mdi:dots-horizontal ml-5 text-xl"></div>
+          <div class="i-mdi:dots-horizontal ml-2 text-3xl"></div>
         </div>
         <div>
           <!-- v-for="(i, index) in items" để in ra vị trí của đối tượng trong mảng
@@ -20,7 +20,10 @@
                 v-for="(x, index) in i.data"
                 :key="index"
               >
-                <nuxt-link to="/params" class="flex items-center space-x-2 cursor-pointer decoration-none">
+                <nuxt-link
+                  to="/params"
+                  class="flex items-center space-x-2 cursor-pointer decoration-none ml-8"
+                >
                   <p class="text-green text-sm">Get</p>
                   <p class="text-black">New Request</p>
                 </nuxt-link>
@@ -53,6 +56,7 @@ const addCollection = () => {
     data: [],
   }
   items.value.push(newItem)
+  
 }
 const options = [
   {
