@@ -1,5 +1,8 @@
 <template>
   <div>
+    <p v-for="user in users" :key="user.id">
+      {{ user.name }}
+    </p>
     <n-layout has-sider>
       <n-layout-sider class="bg-white" content-style="padding: 10px; border: 1px solid lightgray;">
         <div class="flex items-center">
@@ -47,6 +50,9 @@
 </template>
 <script setup>
 import { ref } from "vue"
+import userData from "./User.json"
+
+const users = ref(userData)
 
 const items = ref([])
 
@@ -56,7 +62,6 @@ const addCollection = () => {
     data: [],
   }
   items.value.push(newItem)
-  
 }
 const options = [
   {

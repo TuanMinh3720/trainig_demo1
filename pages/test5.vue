@@ -8,17 +8,15 @@
         <input v-model="inputData" placeholder="Enter URL or paste text" class="h-7 w-80% border" />
         <div class="flex items-center ml-2 mr-2">
           <n-button @click="getApi" class="h-8.5" color="blue">Send</n-button>
-          <div class="bg-#0000FF h-8.5">
-            <n-dropdown placement="bottom-start" trigger="click" :options="options2">
-              <div class="i-mdi:chevron-down bg-white text-xl"></div>
-            </n-dropdown>
-          </div>
+          <div class="bg-#0000FF h-8.5"></div>
         </div>
       </div>
     </div>
     <div class="w-1/2">
+      <h2 class="ml-5 text-truegray">Reponse</h2>
+      <img v-if="showImage" src="./Postman.png" alt="Postman logo" class="ml-40 mt-40" />
+
       <div v-if="responseData">
-        <h2 class="ml-5 text-truegray">Reponse</h2>
         <pre>{{ JSON.stringify(responseData, null, 2) }}</pre>
       </div>
       <div v-if="errorMsg" class="text-red-500 text-xl">
@@ -36,6 +34,7 @@ const selectRef = ref("GET")
 const inputData = ref("https://642541e49e0a30d92b2ccf2a.mockapi.io/Minhh")
 const responseData = ref(null)
 const errorMsg = ref("")
+const showImage = ref(true)
 const getApi = async () => {
   if (!isValidUrl(inputData.value)) {
     errorMsg.value = "URL không đúng định dạng"
@@ -75,11 +74,11 @@ const handleGet = async () => {
     const response = await axios.get(inputData.value)
     responseData.value = response.data
     errorMsg.value = null
+    showImage.value = false
   } catch (error) {
     if (error.response) {
       responseData.value = error.response
     } else {
-      
       errorMsg.value = "Đã xảy ra lỗi trong quá trình gửi yêu cầu"
       responseData.value = null
     }
