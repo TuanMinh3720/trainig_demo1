@@ -44,7 +44,7 @@
           placeholder="Enter URL or paste text"
           class="border h-10 w-80% p-1"
         />
-        <div class="flex items-center ml-2 mr-2 bg-blue-600 rounded-md h-10">
+        <div class="w-12% flex items-center ml-2 mr-2 bg-blue-600 rounded-md h-10">
           <button @click="getApi" class="bg-blue-600 text-white border-none font-bold py-2 px-4 rounded-md">
             Send
           </button>
@@ -60,14 +60,14 @@
     <n-layout-footer class=" ">
       <div class="flex w-full h-screen divide-x divide-gray-300">
         <div class="w2/3 bg-white">
-          <n-card>
+          <n-card class="mt--2">
             <n-tabs type="line" animated>
               <n-tab-pane name="Params" tab="Params">
                 <div>
-                  <p class="font-bold">Query Params</p>
+                  <p class="font-bold mt-1">Query Params</p>
                 </div>
                 <div>
-                  <n-table :bordered="false" :single-line="false">
+                  <n-table size="small" :bordered="true" :single-line="false">
                     <thead>
                       <tr>
                         <th></th>
@@ -351,14 +351,14 @@
             </n-tabs>
           </n-card>
         </div>
-        <div class="w1/3 bg-white">
+        <div class="w1/3 bg-white overflow-y-auto h-80%">
           <h2 class="ml-5 text-truegray">Response</h2>
           <img v-if="showImg" src="./Postman.png" alt="" class="ml-10 mt-20" />
-          <div v-if="responseData">
+          <div class="whitespace-pre-wrap" v-if="responseData">
             <div v-show="!isLoading">
-              <pre class="whitespace-pre-wrap overflow-anywhere">{{
-                JSON.stringify(responseData, null, 2)
-              }}</pre>
+              <n-config-provider :hljs="hljs">
+                <n-code :code="JSON.stringify(responseData, null, 2)" language="json" />
+              </n-config-provider>
             </div>
           </div>
           <div v-if="errorMsg">
@@ -376,6 +376,10 @@
 <script setup>
 import { ref, watch, watchEffect, nextTick } from "vue"
 import axios from "axios"
+import hljs from "highlight.js/lib/core"
+import json from "highlight.js/lib/languages/json"
+
+hljs.registerLanguage("json", json)
 
 const boxs = ref([])
 const showTable = ref(false)

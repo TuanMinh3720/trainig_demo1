@@ -1,8 +1,5 @@
 <template>
   <div>
-    <p v-for="user in users" :key="user.id">
-      {{ user.name }}
-    </p>
     <n-layout has-sider>
       <n-layout-sider class="bg-white" content-style="padding: 10px; border: 1px solid lightgray;">
         <div class="flex items-center">
@@ -15,7 +12,7 @@
           <!-- v-for="(i, index) in items" để in ra vị trí của đối tượng trong mảng
         v-for dùng of hoặc in đều được -->
 
-          <n-collapse class="flex justify-between" v-for="(i, index) in items" :key="index">
+          <n-collapse class="flex justify-between mt5" v-for="(i, index) in items" :key="index">
             <n-collapse-item :title="i.title" name="">
               <n-collapse-item
                 class="justify-between items-center"
@@ -25,10 +22,11 @@
               >
                 <nuxt-link
                   to="/params"
-                  class="flex items-center space-x-2 cursor-pointer decoration-none ml-8"
+                  class="flex items-center space-x-2 cursor-pointer decoration-none mt--3 ml-8"
                 >
                   <p class="text-green text-sm">Get</p>
                   <p class="text-black">New Request</p>
+                  <div class="i-mdi:message-question-outline bg-green-600 text-xl"></div>
                 </nuxt-link>
               </n-collapse-item>
             </n-collapse-item>
@@ -50,10 +48,6 @@
 </template>
 <script setup>
 import { ref } from "vue"
-import userData from "./User.json"
-
-const users = ref(userData)
-
 const items = ref([])
 
 const addCollection = () => {
