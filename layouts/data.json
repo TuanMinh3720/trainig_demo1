@@ -1,0 +1,43 @@
+{
+  "info": {
+    "_postman_id": "2f1e804e-f3bc-466e-9132-7cce9122bbdb",
+    "name": "Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26196196"
+  },
+  "item": [
+    {
+      "name": "folder test 1",
+      "item": [
+        {
+          "name": "GETT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": ["fakestoreapi", "com"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GETTT",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://fakestoreapi.com/products",
+          "protocol": "https",
+          "host": ["fakestoreapi", "com"],
+          "path": ["products"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
